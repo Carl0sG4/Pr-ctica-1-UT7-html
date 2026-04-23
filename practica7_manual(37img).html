@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth bg-slate-50 dark:bg-slate-900">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manual de Despliegue - OpenCloud Solutions</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'media', /* Cambia automáticamente según el tema del sistema */
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'monospace']
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    .image-placeholder {
+      @apply flex flex-col items-center justify-center w-full aspect-video bg-slate-100 dark:bg-slate-900/50 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 my-6 text-slate-500 dark:text-slate-400 overflow-hidden relative transition-all hover:bg-slate-200 dark:hover:bg-slate-800;
+    }
+
+    .image-placeholder img {
+      @apply absolute inset-0 w-full h-full object-contain bg-black rounded-xl;
+    }
+
+    /* Ajuste para el scroll cuando hay un header fijo */
+    section {
+      scroll-margin-top: 100px;
+    }
+  </style>
+</head>
+
+<body
+  class="text-slate-800 dark:text-slate-200 antialiased font-sans transition-colors duration-300 selection:bg-brand-500 selection:text-white">
+
+  <!-- Navbar fija estilo Glassmorphism -->
+  <nav
+    class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="bg-brand-600 text-white p-2 rounded-lg">
+          <i data-lucide="cloud" class="w-5 h-5"></i>
+        </div>
+        <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">OpenCloud</span>
+      </div>
+      <div class="hidden sm:flex items-center gap-4">
+        <span
+          class="text-xs font-semibold tracking-wider uppercase text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/30 px-3 py-1 rounded-full border border-brand-100 dark:border-brand-800">
+          Práctica DAM
+        </span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-br from-slate-900 to-brand-900 text-white py-16 sm:py-24 relative overflow-hidden">
+    <div
+      class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] [mask-image:linear-gradient(to_bottom,white,transparent)]">
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6">
+        Manual de Despliegue<br>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Infraestructura
+          Segura</span>
+      </h1>
+      <p class="text-lg sm:text-xl text-slate-300 max-w-2xl leading-relaxed">
+        Documentación técnica detallada paso a paso para la configuración de la oficina técnica de <strong>OpenCloud
+          Solutions</strong> utilizando entornos Linux virtualizados.<br><br> Desarrollado por: <strong>Carlos Guaraca
+          Nagua</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- Contenedor Principal con Sidebar -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col lg:flex-row gap-10">
+
+    <!-- Sidebar de Navegación (Desktop) -->
+    <aside class="hidden lg:block w-64 shrink-0">
+      <div class="sticky top-28 flex flex-col gap-2">
+        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Tabla de Contenidos</h4>
+        <a href="#introduccion"
+          class="text-sm text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium py-1.5 transition-colors flex items-center gap-2"><i
+            data-lucide="info" class="w-4 h-4"></i> Introducción</a>
+        <a href="#fase-a"
+          class="text-sm text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium py-1.5 transition-colors flex items-center gap-2"><i
+            data-lucide="network" class="w-4 h-4"></i> Fase A: Red y Dominios</a>
+        <a href="#fase-b"
+          class="text-sm text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium py-1.5 transition-colors flex items-center gap-2"><i
+            data-lucide="folder-open" class="w-4 h-4"></i> Fase B: Ficheros y Web</a>
+        <a href="#fase-c"
+          class="text-sm text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium py-1.5 transition-colors flex items-center gap-2"><i
+            data-lucide="shield-check" class="w-4 h-4"></i> Fase C: Bastionado</a>
+        <a href="#validaciones"
+          class="text-sm text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 font-medium py-1.5 transition-colors flex items-center gap-2"><i
+            data-lucide="check-circle" class="w-4 h-4"></i> Verificaciones Finales</a>
+      </div>
+    </aside>
+
+    <!-- Contenido Principal -->
+    <main class="flex-1 min-w-0">
+
+      <!-- Introducción -->
+      <section id="introduccion" class="mb-16">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8">
+          <h2 class="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Introducción al Escenario</h2>
+          <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+            Este manual documenta el despliegue técnico de la oficina técnica de la empresa tecnológica
+            <strong>"OpenCloud Solutions"</strong>. Se ha configurado una infraestructura segura basada en Linux
+            utilizando VirtualBox, que incluye un controlador de dominio, servidor de ficheros departamental, servidor
+            web, y medidas de seguridad perimetral.
+          </p>
+        </div>
+      </section>
+
+      <!-- FASE A -->
+      <section id="fase-a" class="mb-16">
+        <h2 class="text-3xl font-bold mb-8 flex items-center gap-3 text-slate-900 dark:text-white">
+          <div class="bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-400 p-2 rounded-lg">
+            <i data-lucide="network" class="w-6 h-6"></i>
+          </div>
+          Fase A: Acceso a Recursos y Dominios
+        </h2>
+
+        <!-- Tarjeta A.1 -->
+        <article
+          class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 sm:p-8 mb-8">
+          <h3 class="text-xl font-bold mb-4 text-slate-900 dark:text-white">A.1. Configuración de Red en VirtualBox</h3>
+          <p class="mb-6 text-slate-600 dark:text-slate-400">Para garantizar el aislamiento y la conectividad a Internet
+            de nuestro servidor, necesitamos configurarle dos interfaces de red físicas virtuales. El cliente, por otro
+            lado, solo debe tener acceso a la red interna corporativa.</p>
+
+          <figure class="my-6">
+            <div class="image-placeholder group">
+              <i data-lucide="image"
+                class="w-10 h-10 mb-2 opacity-40 group-hover:opacity-100 transition-opacity text-brand-500"></i>
+              <img src="Img/1/1.png" alt="Adaptador 1 del Servidor">
+            </div>
+            <figcaption class="text-sm text-slate-600 dark:text-slate-400 mt-3 border-l-4 border-brand-500 pl-3">
+              <strong class="text-slate-900 dark:text-white">Imagen 1:</strong> Panel de VirtualBox mostrando el
+              Adaptador 1 de SRV-ADMIN en modo NAT. Es necesario para que el servidor tenga conexión a Internet y pueda
+              descargar actualizaciones y software.
+            </figcaption>
+          </figure>
+
+          <figure class="my-6">
+            <div class="image-placeholder group">
+              <i data-lucide="image"
+                class="w-10 h-10 mb-2 opacity-40 group-hover:opacity-100 transition-opacity text-brand-500"></i>
+              <img src="Img/1/2.png" alt="Adaptador 1 del Servidor">
+            </div>
+            <figcaption class="text-sm text-slate-600 dark:text-slate-400 mt-3 border-l-4 border-brand-500 pl-3">
+              <strong class="text-slate-900 dark:text-white">Imagen 2:</strong> Configuración del Adaptador 2 en modo
+              "Red Interna" (intnet). Esto crea una red LAN aislada donde el servidor se comunicará de forma segura con
+              los equipos cliente.
+            </figcaption>
+          </figure>
+
+          <figure class="my-6">
+            <div class="image-placeholder group">
+              <i data-lucide="image"
+                class="w-10 h-10 mb-2 opacity-40 group-hover:opacity-100 transition-opacity text-brand-500"></i>
+              <img src="Img/1/3.png" alt="Adaptador 1 del Servidor">
+            </div>
+            <figcaption class="text-sm text-slate-600 dark:text-slate-400 mt-3 border-l-4 border-brand-500 pl-3">
+              <strong class="text-slate-900 dark:text-white">Imagen 3:</strong> Ajustes de red de la máquina cliente
+              (MINT CARLOS LM). Su único adaptador se conecta a la misma "Red Interna" para asegurar que comparte subred
+              con el servidor.
+            </figcaption>
+        </article>
+
+        <!-- Tarjeta A.2 -->
+        <article
+          class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 sm:p-8 mb-8">
+          <h3 class="text-xl font-bold mb-4 text-slate-900 dark:text-white">A.2. Configuración de Red Estática (Netplan)
+          </h3>
+          <p class="mb-6 text-slate-600 dark:text-slate-400">En Ubuntu Server, asignamos la IP fija requerida
+            (192.168.100.1) a la segunda interfaz del servidor mediante Netplan.</p>
+
+          <figure class="my-6">
+            <div class="image-placeholder group">
+              <img src="Img/1/4.png" alt="Adaptador 1 del Servidor">
+            </div>
+            <figcaption class="text-sm text-slate-600 dark:text-slate-400 mt-3 border-l-4 border-brand-500 pl-3">
+              <strong class="text-slate-900 dark:text-white">Imagen 4:</strong> Ejecución del comando <code>ip a</code>
+              en el servidor. Se observa que la interfaz principal tiene IP, pero <code>enp0s8</code> (nuestra red
+              interna) está apagada y sin configuración.
+            </figcaption>
+          </figure>
+
+          <!-- Terminal Estilizada -->
+          <div class="my-6 rounded-xl overflow-hidden border border-slate-700 dark:border-slate-600 shadow-lg">
+            <div class="bg-slate-800 px-4 py-3 flex items-center gap-2 border-b border-slate-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="text-xs text-slate-400 font-mono ml-2">bash - ubuntu@srv-admin</span>
+            </div>
+            <div class="bg-slate-900 text-slate-300 p-5 overflow-x-auto text-sm font-mono leading-relaxed">
+              <span class="text-slate-500"># Accedemos a editar el archivo de configuración de Netplan</span><br>
+              <span class="text-emerald-400">sudo</span> nano /etc/netplan/50-cloud-init.yaml
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <figure>
+              <div class="image-placeholder group">
+                <img src="Img/1/5.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-500 text-center"><strong>Im. 5:</strong> Apertura del archivo YAML
+                en nano para configurar Netplan.</figcaption>
+            </figure>
+            <figure>
+              <div class="image-placeholder group">
+                <img src="Img/1/6.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-500 text-center"><strong>Im. 6:</strong> Vista del archivo original,
+                que solo incluye la interfaz enp0s3 por DHCP.</figcaption>
+            </figure>
+          </div>
+
+          <p class="mt-8 mb-4 text-slate-600 dark:text-slate-400">Añadimos la configuración para <code>enp0s8</code>
+            respetando la sintaxis YAML:</p>
+
+          <!-- Editor Code Block -->
+          <div class="my-6 rounded-xl overflow-hidden border border-slate-700 shadow-lg">
+            <div class="bg-slate-800 px-4 py-2 text-xs text-slate-400 font-mono text-center border-b border-slate-700">
+              50-cloud-init.yaml</div>
+            <div class="bg-slate-900 text-blue-300 p-5 overflow-x-auto text-sm font-mono leading-relaxed">
+              network:<br>
+              &nbsp;&nbsp;version: 2<br>
+              &nbsp;&nbsp;ethernets:<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;enp0s3:<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dhcp4: true<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">enp0s8:</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">addresses:</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-yellow-400">- 192.168.100.1/24</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <figure>
+              <div class="image-placeholder group">
+                <img src="Img/1/7.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-500 text-center"><strong>Im. 7:</strong> Escritura manual del bloque
+                para <code>enp0s8</code>, respetando la estricta indentación YAML.</figcaption>
+            </figure>
+            <figure>
+              <div class="image-placeholder group">
+                <img src="Img/1/8.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-500 text-center"><strong>Im. 8:</strong> Asignación de la IP
+                estática 192.168.100.1/24 a la nueva interfaz.</figcaption>
+            </figure>
+          </div>
+
+          <div class="my-6 rounded-xl overflow-hidden border border-slate-700 dark:border-slate-600 shadow-lg mt-8">
+            <div class="bg-slate-800 px-4 py-3 flex items-center gap-2 border-b border-slate-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <div class="bg-slate-900 text-slate-300 p-5 text-sm font-mono">
+              <span class="text-slate-500"># Aplicamos los cambios en la red</span><br>
+              <span class="text-emerald-400">sudo</span> netplan apply
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <figure>
+              <div class="image-placeholder group">
+                <img src="Img/1/9.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-600 dark:text-slate-400 text-center">
+                <strong>Im. 9:</strong> Error devuelto al aplicar Netplan. Ocurre por un fallo de espacios en el bloque
+                YAML que bloquea la configuración.
+              </figcaption>
+            </figure>
+            <figure>
+              <div class="image-placeholder group">
+
+                <img src="Img/1/10.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-600 dark:text-slate-400 text-center">
+                <strong>Im. 10:</strong> Tras corregir los espacios, <code>ip a</code> confirma que <code>enp0s8</code>
+                está UP y con la IP correctamente asignada.
+              </figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <!-- Tarjeta A.3 -->
+        <article
+          class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 sm:p-8 mb-8">
+          <h3 class="text-xl font-bold mb-4 text-slate-900 dark:text-white">A.3. Configuración de Red en el Cliente Mint
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
+            <figure>
+              <div class="image-placeholder group">
+                <img src="Img/1/11.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-500 text-center"><strong>Im. 11:</strong> Acceso al panel gráfico de
+                configuración de red en Linux Mint.</figcaption>
+            </figure>
+            <figure>
+              <div class="image-placeholder group">
+                <img src="Img/1/12.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-500 text-center"><strong>Im. 12:</strong> Configuración IPv4 en
+                manual. Se asigna la IP 192.168.100.2 y se apunta al servidor.</figcaption>
+            </figure>
+            <figure>
+              <div class="image-placeholder group">
+                <img src="Img/1/13.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-500 text-center"><strong>Im. 13:</strong> Interfaz reiniciada. El
+                perfil muestra que la nueva IP estática ha sido aplicada.</figcaption>
+            </figure>
+          </div>
+
+          <div class="my-6 rounded-xl overflow-hidden border border-slate-700 shadow-lg">
+            <div class="bg-slate-800 px-4 py-3 flex items-center gap-2 border-b border-slate-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <div class="bg-slate-900 text-slate-300 p-5 text-sm font-mono">
+              <span class="text-slate-500"># Prueba de conectividad ICMP desde la terminal de Mint</span><br>
+              <span class="text-emerald-400">ping</span> -c 4 192.168.100.1
+            </div>
+          </div>
+
+          <figure class="my-6">
+            <div class="image-placeholder group">
+
+              <img src="Img/1/14.png" alt="Adaptador 1 del Servidor">
+            </div>
+            <figcaption class="text-sm text-slate-600 dark:text-slate-400 mt-3 border-l-4 border-brand-500 pl-3">
+              <strong class="text-slate-900 dark:text-white">Imagen 14:</strong> Prueba de conectividad con
+              <code>ping 192.168.100.1</code>. El cliente recibe respuesta del servidor, confirmando la conexión.
+            </figcaption>
+        </article>
+
+        <!-- Tarjeta A.4 -->
+        <article
+          class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 sm:p-8 mb-8">
+          <h3 class="text-xl font-bold mb-4 text-slate-900 dark:text-white">A.4. Montaje Permanente de Datos</h3>
+
+          <figure class="my-6">
+            <div class="image-placeholder group">
+
+              <img src="Img/1/15.png" alt="Adaptador 1 del Servidor">
+            </div>
+            <figcaption class="text-sm text-slate-600 dark:text-slate-400 mt-3 border-l-4 border-brand-500 pl-3">
+              <strong class="text-slate-900 dark:text-white">Imagen 15:</strong> Asistente de VirtualBox acoplando un
+              segundo disco de 10 GB a la controladora SATA para almacenar los datos empresariales.
+            </figcaption>
+          </figure>
+
+          <div class="my-6 rounded-xl overflow-hidden border border-slate-700 shadow-lg">
+            <div class="bg-slate-800 px-4 py-3 flex items-center gap-2 border-b border-slate-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <div class="bg-slate-900 text-slate-300 p-5 text-sm font-mono leading-relaxed">
+              <span class="text-slate-500"># 1. Formateamos el disco al sistema de archivos EXT4</span><br>
+              <span class="text-emerald-400">sudo</span> mkfs.ext4 /dev/sdb<br><br>
+              <span class="text-slate-500"># 2. Creamos la carpeta donde montaremos el disco</span><br>
+              <span class="text-emerald-400">sudo</span> mkdir -p /mnt/datos_empresa<br><br>
+              <span class="text-slate-500"># 3. Lo montamos temporalmente</span><br>
+              <span class="text-emerald-400">sudo</span> mount /dev/sdb /mnt/datos_empresa<br><br>
+              <span class="text-slate-500"># 4. Lo hacemos persistente en fstab</span><br>
+              <span class="text-emerald-400">sudo</span> nano /etc/fstab
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <figure>
+              <div class="image-placeholder group">
+
+                <img src="Img/1/16.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-600 dark:text-slate-400 text-center mt-2">
+                <strong>Im. 16:</strong> Formateo del nuevo disco (sdb) a ext4 y su posterior montaje en
+                <code>/mnt/datos_empresa</code>.
+              </figcaption>
+            </figure>
+            <figure>
+              <div class="image-placeholder group">
+
+                <img src="Img/1/17.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-600 dark:text-slate-400 text-center mt-2">
+                <strong>Im. 17:</strong> Edición de <code>/etc/fstab</code> añadiendo la ruta del disco para que se
+                monte automáticamente al reiniciar el sistema.
+              </figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <!-- Tarjeta A.5 -->
+        <article
+          class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 sm:p-8 mb-8">
+          <h3 class="text-xl font-bold mb-4 text-slate-900 dark:text-white">A.5. Controlador de Dominio (Samba4 AD DC)
+          </h3>
+
+          <figure class="my-6">
+            <div class="image-placeholder group">
+
+              <img src="Img/1/18.png" alt="Adaptador 1 del Servidor">
+            </div>
+            <figcaption class="text-sm text-slate-600 dark:text-slate-400 mt-3 border-l-4 border-brand-500 pl-3">
+              <strong class="text-slate-900 dark:text-white">Imagen 18:</strong> Edición de <code>/etc/hosts</code> para
+              vincular la IP del servidor a su nombre de dominio DNS local (srv-admin.opencloud.local).
+            </figcaption>
+          </figure>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
+            <figure>
+              <div class="image-placeholder group">
+                <span class="text-sm font-medium px-2">Imagen 19</span>
+                <img src="Img/1/19.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-500 text-center"><strong>Im. 19:</strong> Instalación de Kerberos.
+                Definimos el reino en mayúsculas: OPENCLOUD.LOCAL.</figcaption>
+            </figure>
+            <figure>
+              <div class="image-placeholder group">
+                <span class="text-sm font-medium px-2">Imagen 20</span>
+                <img src="Img/1/20.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-500 text-center"><strong>Im. 20:</strong> Se indica que el servidor
+                Kerberos principal es el propio equipo.</figcaption>
+              </figcaption>
+            </figure>
+            <figure>
+              <div class="image-placeholder group">
+                <span class="text-sm font-medium px-2">Imagen 21</span>
+                <img src="Img/1/21.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-500 text-center"><strong>Im. 21:</strong> Ejecución de provision AD,
+                donde se crea la estructura del dominio y la BD LDAP.</figcaption>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="my-6 rounded-xl overflow-hidden border border-slate-700 shadow-lg">
+            <div class="bg-slate-800 px-4 py-3 flex items-center gap-2 border-b border-slate-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <div class="bg-slate-900 text-slate-300 p-5 text-sm font-mono leading-relaxed">
+              <span class="text-emerald-400">sudo</span> cp /var/lib/samba/private/krb5.conf /etc/krb5.conf<br>
+              <span class="text-emerald-400">sudo</span> systemctl unmask samba-ad-dc<br>
+              <span class="text-emerald-400">sudo</span> systemctl enable samba-ad-dc<br>
+              <span class="text-emerald-400">sudo</span> systemctl start samba-ad-dc<br><br>
+              <span class="text-slate-500"># Comprobamos estado del dominio</span><br>
+              <span class="text-emerald-400">sudo</span> samba-tool domain level show
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <figure>
+              <div class="image-placeholder group">
+
+                <img src="Img/1/22.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-600 dark:text-slate-400 text-center">
+                <strong>Im. 22:</strong> Error "Permission denied" al intentar comprobar el nivel del dominio sin usar
+                privilegios sudo.
+              </figcaption>
+            </figure>
+            <figure>
+              <div class="image-placeholder group">
+
+                <img src="Img/1/23.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-600 dark:text-slate-400 text-center">
+                <strong>Im. 23:</strong> Consulta exitosa. Se confirma que el bosque y dominio están operativos en nivel
+                Windows 2008 R2.
+              </figcaption>
+            </figure>
+          </div>
+        </article>
+      </section>
+
+      <!-- FASE B -->
+      <section id="fase-b" class="mb-16">
+        <h2 class="text-3xl font-bold mb-8 flex items-center gap-3 text-slate-900 dark:text-white">
+          <div class="bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 p-2 rounded-lg">
+            <i data-lucide="folder-open" class="w-6 h-6"></i>
+          </div>
+          Fase B: Servicios de Ficheros y Aplicaciones
+        </h2>
+
+        <article
+          class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 sm:p-8 mb-8">
+          <h3 class="text-xl font-bold mb-4 text-slate-900 dark:text-white">B.1. Compartición de Ficheros (Samba)</h3>
+
+          <div class="my-6 rounded-xl overflow-hidden border border-slate-700 shadow-lg">
+            <div class="bg-slate-800 px-4 py-3 flex items-center gap-2 border-b border-slate-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <div class="bg-slate-900 text-slate-300 p-5 text-sm font-mono leading-relaxed">
+              <span class="text-slate-500"># Carpetas departamentales y permisos</span><br>
+              <span class="text-emerald-400">sudo</span> mkdir -p /mnt/datos_empresa/ventas /mnt/datos_empresa/it<br>
+              <span class="text-emerald-400">sudo</span> chmod -R 777 /mnt/datos_empresa/<br><br>
+              <span class="text-slate-500"># Editar configuración SMB</span><br>
+              <span class="text-emerald-400">sudo</span> nano /etc/samba/smb.conf
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <figure>
+              <div class="image-placeholder group">
+
+                <img src="Img/1/24.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-600 dark:text-slate-400 text-center">
+                <strong>Im. 24:</strong> Creación de carpetas departamentales con permisos 777 temporales para evitar
+                bloqueos UNIX iniciales.
+              </figcaption>
+            </figure>
+            <figure>
+              <div class="image-placeholder group">
+
+                <img src="Img/1/25.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-600 dark:text-slate-400 text-center">
+                <strong>Im. 25:</strong> Configuración de bloques en <code>smb.conf</code> para publicar las carpetas en
+                la red y requerir autenticación.
+              </figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <article
+          class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 sm:p-8 mb-8">
+          <h3 class="text-xl font-bold mb-4 text-slate-900 dark:text-white">B.2. Servidor Web Corporativo (Apache)</h3>
+
+          <div class="my-6 rounded-xl overflow-hidden border border-slate-700 shadow-lg">
+            <div class="bg-slate-800 px-4 py-3 flex items-center gap-2 border-b border-slate-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <div class="bg-slate-900 text-slate-300 p-5 text-sm font-mono leading-relaxed">
+              <span class="text-emerald-400">echo</span> "<span class="text-yellow-300">&lt;h1&gt;OpenCloud Solutions
+                Oficina Técnica&lt;/h1&gt; &lt;p&gt;Infraestructura Linux gestionada por el departamento de
+                sistemas.&lt;/p&gt;</span>" | <span class="text-emerald-400">sudo tee</span> /var/www/html/index.html
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
+            <figure>
+              <div class="image-placeholder group">
+                <span class="text-sm font-medium px-2 text-center">Imagen 26</span>
+                <img src="Img/1/26.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-500 text-center"><strong>Im. 26:</strong> Escribiendo código HTML
+                básico desde la terminal utilizando el comando <code>echo</code>.</figcaption>
+            </figure>
+            <figure>
+              <div class="image-placeholder group">
+                <span class="text-sm font-medium px-2 text-center">Imagen 27</span>
+                <img src="Img/1/27.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-500 text-center"><strong>Im. 27:</strong> Tubería con
+                <code>sudo tee</code> para inyectar el código directamente en el directorio web protegido.
+              </figcaption>
+            </figure>
+            <figure>
+              <div class="image-placeholder group">
+                <span class="text-sm font-medium px-2 text-center">Imagen 28</span>
+                <img src="Img/1/28.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-500 text-center"><strong>Im. 28:</strong> Retorno por consola que
+                confirma que el archivo <code>index.html</code> ha sido sobrescrito.</figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <article
+          class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 sm:p-8 mb-8">
+          <h3 class="text-xl font-bold mb-4 text-slate-900 dark:text-white">B.3. Impresión y Control de Acceso (ACLs)
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+            <figure>
+              <div class="image-placeholder group">
+
+                <img src="Img/1/29.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-600 dark:text-slate-400 text-center">
+                <strong>Im. 29:</strong> Uso de <code>cupsctl</code> para habilitar la administración remota de
+                impresoras en la red.
+              </figcaption>
+            </figure>
+            <figure>
+              <div class="image-placeholder group">
+
+                <img src="Img/1/30.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-600 dark:text-slate-400 text-center">
+                <strong>Im. 30:</strong> Aplicación de ACLs con <code>setfacl</code> para dar al usuario 'alumno'
+                permisos granulares sobre el directorio web.
+              </figcaption>
+            </figure>
+          </div>
+        </article>
+      </section>
+
+      <!-- FASE C -->
+      <section id="fase-c" class="mb-16">
+        <h2 class="text-3xl font-bold mb-8 flex items-center gap-3 text-slate-900 dark:text-white">
+          <div class="bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400 p-2 rounded-lg">
+            <i data-lucide="shield-alert" class="w-6 h-6"></i>
+          </div>
+          Fase C: Bastionado y Seguridad
+        </h2>
+
+        <article
+          class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 sm:p-8 mb-8">
+          <h3 class="text-xl font-bold mb-4 text-slate-900 dark:text-white">C.2. Restricción SSH a Root</h3>
+          <p class="mb-6 text-slate-600 dark:text-slate-400">Impedimos el inicio de sesión remoto para el administrador
+            principal del sistema editando el demonio SSH.</p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <figure>
+              <div class="image-placeholder group">
+
+                <img src="Img/1/31.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-600 dark:text-slate-400 text-center mt-2">
+                <strong>Im. 31:</strong> Apertura de la configuración global del demonio SSH para aplicar políticas de
+                seguridad.
+              </figcaption>
+            </figure>
+            <figure>
+              <div class="image-placeholder group">
+
+                <img src="Img/1/32.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-600 dark:text-slate-400 text-center mt-2">
+                <strong>Im. 32:</strong> Bastionado del sistema bloqueando el inicio de sesión del superusuario
+                configurando <code>PermitRootLogin</code> a prohibit-password.
+              </figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <article
+          class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 sm:p-8 mb-8">
+          <h3 class="text-xl font-bold mb-4 text-slate-900 dark:text-white">C.3. Cortafuegos (UFW) y Fail2Ban</h3>
+
+          <div class="my-6 rounded-xl overflow-hidden border border-slate-700 shadow-lg">
+            <div class="bg-slate-800 px-4 py-3 flex items-center gap-2 border-b border-slate-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <div class="bg-slate-900 text-slate-300 p-5 text-sm font-mono leading-relaxed">
+              <span class="text-slate-500"># Reglas del firewall UFW</span><br>
+              <span class="text-emerald-400">sudo</span> ufw allow 22/tcp <span class="text-slate-500">&nbsp;&nbsp;#
+                SSH</span><br>
+              <span class="text-emerald-400">sudo</span> ufw allow 80/tcp <span class="text-slate-500">&nbsp;&nbsp;#
+                HTTP</span><br>
+              <span class="text-emerald-400">sudo</span> ufw allow 445/tcp <span class="text-slate-500">&nbsp;# Samba
+                SMB</span><br>
+              <span class="text-emerald-400">sudo</span> ufw enable
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <figure>
+              <div class="image-placeholder group">
+
+                <img src="Img/1/33.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-600 dark:text-slate-400 text-center mt-2">
+                <strong>Im. 33:</strong> Carga de reglas en UFW para permitir únicamente tráfico SSH, HTTP y SMB.
+                Finalmente se activa el firewall.
+              </figcaption>
+            </figure>
+            <figure>
+              <div class="image-placeholder group">
+
+                <img src="Img/1/34.png" alt="Adaptador 1 del Servidor">
+              </div>
+              <figcaption class="text-xs text-slate-600 dark:text-slate-400 text-center mt-2">
+                <strong>Im. 34:</strong> Comprobación de las reglas en UFW y confirmación de que Fail2Ban está vigilando
+                para frenar ataques de fuerza bruta.
+              </figcaption>
+            </figure>
+          </div>
+        </article>
+      </section>
+
+      <!-- VALIDACIONES -->
+      <section id="validaciones"
+        class="mb-16 bg-gradient-to-br from-brand-50 to-emerald-50 dark:from-slate-800 dark:to-slate-800/80 p-8 sm:p-10 rounded-3xl border border-brand-100 dark:border-slate-700 shadow-md">
+        <h2 class="text-3xl font-bold mb-6 flex items-center gap-3 text-slate-900 dark:text-white">
+          <div class="bg-emerald-500 text-white p-2 rounded-full shadow-lg shadow-emerald-500/30">
+            <i data-lucide="check" class="w-6 h-6"></i>
+          </div>
+          Verificaciones Finales desde el Cliente
+        </h2>
+        <p class="mb-10 text-lg text-slate-600 dark:text-slate-400">Realizamos tres comprobaciones clave desde el equipo
+          Mint (CLI-USER) para garantizar el éxito del despliegue:</p>
+
+        <div class="space-y-12">
+          <!-- Validación 1 -->
+          <div>
+            <h4 class="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-200 flex items-center gap-2"><i
+                data-lucide="globe" class="w-5 h-5 text-blue-500"></i> 1. Servicio Web</h4>
+            <figure
+              class="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-900">
+              <div class="image-placeholder m-0 border-0 rounded-none bg-transparent">
+                <img src="Img/1/35.png" alt="Adaptador 1 del Servidor">
+              </div>
+            </figure>
+            <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">
+              <strong>Imagen 35:</strong> Validación Web: El navegador del cliente carga exitosamente la página
+              corporativa alojada en Apache sin bloqueos del firewall.
+            </p>
+          </div>
+
+          <!-- Validación 2 -->
+          <div>
+            <h4 class="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-200 flex items-center gap-2"><i
+                data-lucide="hard-drive" class="w-5 h-5 text-amber-500"></i> 2. Ficheros y Dominio</h4>
+            <figure
+              class="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-900">
+              <div class="image-placeholder m-0 border-0 rounded-none bg-transparent">
+                <img src="Img/1/36.png" alt="Adaptador 1 del Servidor">
+              </div>
+            </figure>
+            <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">
+              <strong>Imagen 36:</strong> Validación de Ficheros: El cliente accede mediante red SMB al dominio y puede
+              navegar por las carpetas compartidas.
+            </p>
+          </div>
+
+          <!-- Validación 3 -->
+          <div>
+            <h4 class="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-200 flex items-center gap-2"><i
+                data-lucide="lock" class="w-5 h-5 text-red-500"></i> 3. Seguridad SSH</h4>
+            <figure
+              class="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-900">
+              <div class="image-placeholder m-0 border-0 rounded-none bg-transparent">
+                <img src="Img/1/37.png" alt="Adaptador 1 del Servidor">
+              </div>
+            </figure>
+            <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">
+              <strong>Imagen 37:</strong> Validación de Seguridad: Un intento de conexión remota por SSH como usuario
+              root es bloqueado inmediatamente, confirmando el blindaje del sistema.
+            </p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-slate-400 py-12 text-center text-sm border-t border-slate-800 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col items-center gap-4">
+      <div class="flex items-center gap-2 text-white font-semibold">
+        <i data-lucide="cloud" class="w-5 h-5"></i> OpenCloud Solutions
+      </div>
+      <p>&copy; 2026 - Manual de Práctica Sistemas Informáticos</p>
+      <p class="text-xs opacity-60 max-w-md">Despliegue de Infraestructura Segura en Entornos Linux (DAM). Documentación
+        elaborada y generada automáticamente.</p>
+    </div>
+  </footer>
+
+  <!-- Inicializar iconos -->
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+
+</html>
